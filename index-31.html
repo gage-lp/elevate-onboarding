@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Elevate Onboarding — Sign in</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="login-wrap">
+    <div class="login-card">
+      <div class="brand">Elevate<b>.</b></div>
+      <div class="sub">Agent onboarding</div>
+
+      <label class="label" for="email">Email</label>
+      <input class="field" id="email" type="email" autocomplete="email" />
+
+      <label class="label" for="password">Password</label>
+      <input class="field" id="password" type="password" autocomplete="current-password" />
+
+      <button class="btn" id="signin" style="width:100%;">Sign in</button>
+      <div class="err" id="err"></div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script>
+    // If already signed in, skip straight to the right place.
+    (async () => {
+      const ctx = await (async () => {
+        const u = await getSessionUser();
+        if (!u) return null;
+        const { data } = await sb.from("profiles").select("role").eq("id", u.id).single();
+        return data;
+      })();
+      if (ctx) window.location.href = ctx.role === "admin" ? "admin.html" : "dashboard.html";
+    })();
+
+    const errEl = document.getElementById("err");
+    async function doSignIn() {
+      errEl.textContent = "";
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+      if (!email || !password) { errEl.textContent = "Enter your email and password."; return; }
+
+      const { data, error } = await sb.auth.signInWithPassword({ email, password });
+      if (error) { errEl.textContent = "That email and password didn't match. Try again."; return; }
+
+      const { data: profile } = await sb.from("profiles").select("role").eq("id", data.user.id).single();
+      window.location.href = profile?.role === "admin" ? "admin.html" : "dashboard.html";
+    }
+
+    document.getElementById("signin").addEventListener("click", doSignIn);
+    document.getElementById("password").addEventListener("keydown", e => { if (e.key === "Enter") doSignIn(); });
+  </script>
+</body>
+</html>
