@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Elevate Onboarding</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700;900&family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F7F4ED; --ink:#0A0A0A; --blue:#0066ff; --blue2:#4f93ff; --muted:#6B6B66;
+  --line:#E2DDD2; --card:#FFFFFF; --locked:#B8B2A4; --ok:#1F7A4D;
+  --radius:4px; --radius-lg:10px;
+  --display:'Playfair Display',Georgia,serif; --body:'DM Sans',system-ui,sans-serif; --mono:'DM Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--body);background:var(--paper);color:var(--ink);line-height:1.5;-webkit-font-smoothing:antialiased}
+.label{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+h1,h2,h3{font-family:var(--display);font-weight:700;line-height:1.1}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:18px 28px;background:var(--ink);color:var(--paper)}
+.topbar .brand{font-family:var(--display);font-size:20px}
+.topbar .brand b{color:var(--blue)}
+.topbar .who{font-family:var(--mono);font-size:12px;color:#C9C4B8}
+.topbar .right{display:flex;align-items:center;gap:16px}
+.topbar button{background:none;border:1px solid #3a3a3a;color:var(--paper);font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:7px 12px;border-radius:var(--radius);cursor:pointer}
+.topbar button:hover{border-color:var(--blue);color:var(--blue)}
+.wrap{max-width:980px;margin:0 auto;padding:34px 24px 90px}
+/* ring */
+.ring-wrap{position:relative;display:inline-block}
+.ring{display:block;width:100%;height:100%}
+.ring-bg{fill:none;stroke:var(--line)}
+.ring-arc{fill:none;stroke:var(--blue);stroke-linecap:round;transition:stroke-dashoffset 1.1s cubic-bezier(.2,.8,.2,1)}
+.ring-center{position:absolute;inset:0;display:grid;place-items:center}
+.ring-pct{font-family:var(--display);font-weight:700;font-size:34px;color:var(--ink);line-height:1}
+/* DASHBOARD HERO */
+.dash-hero{background:var(--ink);color:var(--paper);padding:56px 24px;position:relative;overflow:hidden}
+.dash-hero::before{content:"";position:absolute;top:-34%;right:-4%;width:500px;height:500px;background:radial-gradient(circle,rgba(0,102,255,.26),transparent 64%);pointer-events:none}
+.dash-hero-inner{max-width:980px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:44px;position:relative;z-index:1;flex-wrap:wrap}
+.dash-eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--blue2);animation:riseIn .5s both}
+.dash-greet{font-size:clamp(36px,6vw,52px);margin:12px 0 8px;animation:riseIn .55s .06s both}
+.dash-sub{color:#C9C4B8;font-size:17px;max-width:42ch;animation:riseIn .55s .12s both}
+.dash-right{text-align:center;flex:none;animation:riseIn .6s .14s both}
+.dash-ringlabel{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#C9C4B8;margin-top:14px}
+.dash-hero .ring-bg{stroke:rgba(255,255,255,.16)}
+.dash-hero .ring-pct{color:#fff;font-size:42px}
+/* feature (up next) */
+.sec-label{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:8px 0 14px}
+.feature{position:relative;background:var(--card);border:1px solid var(--line);border-radius:var(--radius-lg);padding:30px 30px 30px 36px;display:grid;grid-template-columns:auto 1fr auto;gap:26px;align-items:center;cursor:pointer;overflow:hidden;transition:transform .16s,box-shadow .16s;margin-bottom:12px}
+.feature::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,var(--blue),var(--blue2))}
+.feature:hover{transform:translateY(-3px);box-shadow:0 20px 46px -20px rgba(0,102,255,.45)}
+.feature .f-num{font-family:var(--display);font-weight:900;font-size:48px;color:var(--blue);line-height:1}
+.feature .f-eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue)}
+.feature .f-title{font-family:var(--display);font-size:25px;margin:5px 0 4px}
+.feature .f-desc{color:var(--muted);font-size:14px;max-width:42ch}
+.f-go{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#fff;background:var(--blue);padding:13px 20px;border-radius:var(--radius);white-space:nowrap}
+/* completed timeline */
+.timeline{margin-top:4px}
+.tl-item{display:flex;gap:14px;align-items:center;padding:11px 2px;cursor:pointer;border-bottom:1px solid #EFECE2}
+.tl-item:last-child{border-bottom:none}
+.tl-check{width:24px;height:24px;border-radius:99px;background:var(--ok);color:#fff;display:grid;place-items:center;font-size:12px;flex:none}
+.tl-title{font-family:var(--display);font-size:16px;color:#55554f}
+.tl-item:hover .tl-title{color:var(--ink)}
+.lock-hint{font-family:var(--mono);font-size:12px;color:var(--muted);margin:18px 0;display:flex;align-items:center;gap:8px}
+.alldone{text-align:center;padding:30px 24px;border:1px dashed var(--blue);border-radius:var(--radius-lg);background:#F1F6FF;margin-bottom:8px}
+.alldone h2{font-size:24px;margin-bottom:6px}.alldone p{color:var(--muted)}
+/* MODULE PAGE */
+#module-body{min-height:calc(100vh - 60px)}
+.mod-hero{position:relative;background:var(--ink);color:var(--paper);padding:58px 24px 48px;overflow:hidden}
+.mod-glow{position:absolute;top:-45%;left:-8%;width:560px;height:560px;background:radial-gradient(circle,rgba(0,102,255,.30),transparent 64%);z-index:0;pointer-events:none}
+.mod-hero-num{position:absolute;top:50%;right:max(20px,calc(50% - 515px));transform:translateY(-50%);font-family:var(--display);font-weight:900;font-size:clamp(150px,36vw,240px);line-height:1;color:transparent;-webkit-text-stroke:1.5px rgba(0,102,255,.4);z-index:1;pointer-events:none;user-select:none;animation:numIn .65s cubic-bezier(.2,.8,.2,1) both}
+.mod-hero-inner{max-width:1040px;margin:0 auto;position:relative;z-index:2}
+.mod-eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--blue2);display:block;animation:riseIn .5s both}
+.mod-title{font-size:clamp(34px,6vw,54px);margin:12px 0 8px;letter-spacing:-.01em;animation:riseIn .55s .06s both}
+.mod-desc{color:#C9C4B8;max-width:54ch;font-size:16px;animation:riseIn .55s .12s both}
+.mod-layout{max-width:1040px;margin:0 auto;padding:38px 24px 100px;display:grid;grid-template-columns:1fr 300px;gap:46px;align-items:start;animation:riseIn .55s .18s both}
+.mod-main{min-width:0}
+.mod-main .embed{width:100%;aspect-ratio:16/9;border:none;border-radius:var(--radius-lg);margin-bottom:24px;background:#000;box-shadow:0 16px 44px -18px rgba(0,0,0,.45)}
+.mod-main iframe.cal{width:100%;height:600px;border:1px solid var(--line);border-radius:var(--radius-lg);margin-bottom:18px}
+.body-html{color:#34342f;margin-bottom:22px;font-size:16px;line-height:1.7}
+.complete-zone{margin-top:30px;padding-top:24px;border-top:1px solid var(--line)}
+.complete-zone .btn{padding:16px 30px;font-size:13px}
+.complete-zone .btn:hover{transform:translateY(-2px);box-shadow:0 12px 30px -10px rgba(0,102,255,.55)}
+.mod-side{position:sticky;top:24px;display:flex;flex-direction:column;gap:16px}
+.side-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius-lg);padding:22px}
+.side-card.center{text-align:center}
+.side-stat{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:12px}
+.side-title{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+.spine{position:relative}
+.spine .line{position:absolute;left:12px;top:8px;bottom:8px;width:2px;background:var(--line)}
+.spine .node{display:flex;gap:13px;align-items:center;padding:7px 0;position:relative}
+.spine .dot{width:26px;height:26px;border-radius:99px;border:2px solid var(--line);display:grid;place-items:center;font-family:var(--mono);font-size:10px;color:var(--muted);background:var(--card);z-index:1;flex:none}
+.spine .dot.done{background:var(--ok);border-color:var(--ok);color:#fff}
+.spine .dot.cur{background:var(--blue);border-color:var(--blue);color:#fff;box-shadow:0 0 0 4px rgba(0,102,255,.16)}
+.spine .stext{font-size:13px;color:#55554f}
+.spine .stext.cur{font-weight:700;color:var(--ink)}
+.spine .stext.locked{color:var(--locked)}
+.help-card{font-size:13px;color:var(--muted);line-height:1.6}
+.help-card b{color:var(--ink);font-family:var(--body)}
+.mod-side .ring-pct{font-size:30px}
+/* overlay editor */
+.overlay{position:fixed;inset:0;background:rgba(10,10,10,.55);display:none;align-items:center;justify-content:center;padding:24px;z-index:60}
+.overlay.open{display:flex}
+.sheet{background:var(--paper);border-radius:var(--radius-lg);max-width:660px;width:100%;max-height:90vh;overflow-y:auto;padding:32px}
+.sheet .label{margin-bottom:6px}.sheet h2{font-size:26px;margin-bottom:10px}
+.field{width:100%;padding:13px 14px;border:1px solid var(--line);border-radius:var(--radius);font-family:var(--mono);font-size:14px;background:var(--card);margin-bottom:16px}
+.field:focus{outline:none;border-color:var(--blue)}
+textarea.field{min-height:90px;font-family:var(--body);resize:vertical}
+select.field{cursor:pointer}
+.flabel{display:block;margin-bottom:6px;margin-top:4px}
+.btn{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:13px 20px;border-radius:var(--radius);border:none;cursor:pointer;background:var(--blue);color:#fff;transition:opacity .15s,transform .15s,box-shadow .15s;text-decoration:none;display:inline-block}
+.btn:hover{opacity:.92}
+.btn[disabled]{background:var(--locked);cursor:not-allowed}
+.btn.ghost{background:none;color:var(--muted);border:1px solid var(--line)}
+.btn.danger{background:none;color:#B3261E;border:1px solid #E7C9C6}
+.btn.sm{padding:7px 12px;font-size:11px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:8px}
+.note{font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:14px;line-height:1.6}
+.err{color:#B3261E;font-size:13px;margin-top:10px;min-height:18px}
+.pill{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:5px 10px;border-radius:99px;white-space:nowrap}
+.pill.available{background:#EAF1FF;color:var(--blue)}
+.pill.complete{background:#E6F3EC;color:var(--ok)}
+.pill.submitted{background:#FBF0DC;color:#9A6B00}
+.pill.locked{background:#EFECE3;color:var(--locked)}
+.login-wrap{min-height:100vh;display:grid;place-items:center;padding:24px}
+.login-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius-lg);padding:40px 36px;max-width:380px;width:100%}
+.login-card .brand{font-family:var(--display);font-size:26px;margin-bottom:4px}
+.login-card .brand b{color:var(--blue)}
+.login-card .sub{color:var(--muted);font-size:14px;margin-bottom:26px}
+.tabs{display:flex;gap:8px;margin-bottom:28px;border-bottom:1px solid var(--line)}
+.tab{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;padding:12px 16px;background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);cursor:pointer}
+.tab.active{color:var(--ink);border-bottom-color:var(--blue)}
+.mod-row{display:grid;grid-template-columns:40px 1fr auto;align-items:center;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;margin-bottom:10px}
+.mod-row .idx{font-family:var(--mono);color:var(--blue);font-size:16px}
+.mod-row .t{font-family:var(--display);font-size:17px}
+.mod-row .s{font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:3px}
+.mod-row .ctrls{display:flex;gap:6px;align-items:center}
+.icon-btn{font-family:var(--mono);background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);width:30px;height:30px;cursor:pointer;color:var(--muted)}
+.icon-btn:hover{border-color:var(--blue);color:var(--blue)}
+.icon-btn[disabled]{opacity:.4;cursor:not-allowed}
+.agent-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius-lg);padding:18px 20px;margin-bottom:12px}
+.agent-card .head{display:flex;justify-content:space-between;align-items:center;cursor:pointer;gap:12px}
+.agent-card .name{font-family:var(--display);font-size:18px}
+.agent-card .email{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.agent-prog{margin-top:16px;border-top:1px solid var(--line);padding-top:14px;display:none}
+.agent-prog.open{display:block}
+.prog-line{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #F0EDE4;gap:12px}
+.prog-line:last-child{border-bottom:none}.prog-line .pl-title{font-size:14px}
+.link-row .field{margin:0}
+.success{position:fixed;inset:0;background:rgba(10,10,10,.72);display:none;place-items:center;z-index:90}
+.success.open{display:grid}
+.success-inner{text-align:center;color:#fff}
+.success svg{width:88px;height:88px}
+.sc-circle{stroke:var(--blue);stroke-width:4;fill:none;stroke-dasharray:251;stroke-dashoffset:251;animation:draw .5s ease forwards}
+.sc-check{stroke:#fff;stroke-width:5;fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:60;stroke-dashoffset:60;animation:draw .4s .42s ease forwards}
+.sc-text{font-family:var(--mono);letter-spacing:.16em;text-transform:uppercase;font-size:13px;margin-top:18px;opacity:0;animation:riseIn .4s .55s forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes riseIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes numIn{from{opacity:0;transform:translateY(-50%) scale(1.12)}to{opacity:1;transform:translateY(-50%) scale(1)}}
+@media(max-width:860px){.mod-layout{grid-template-columns:1fr;gap:30px}.mod-side{position:static}.feature{grid-template-columns:auto 1fr;gap:18px}.f-go{grid-column:2;justify-self:start;margin-top:8px}.dash-hero-inner{justify-content:center;text-align:center}.dash-sub{margin:0 auto}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.sc-circle,.sc-check{stroke-dashoffset:0}.sc-text{opacity:1}.ring-arc{transition:none}}
+</style>
+</head>
+<body>
+
+<section id="view-login" style="display:none">
+  <div class="login-wrap"><div class="login-card">
+    <div class="brand">Elevate<b>.</b></div>
+    <div class="sub">Agent onboarding</div>
+    <label class="label flabel" for="email">Email</label>
+    <input class="field" id="email" type="email" autocomplete="email" />
+    <label class="label flabel" for="password">Password</label>
+    <input class="field" id="password" type="password" autocomplete="current-password" />
+    <button class="btn" id="signin" style="width:100%">Sign in</button>
+    <div class="err" id="login-err"></div>
+  </div></div>
+</section>
+
+<section id="view-agent" style="display:none">
+  <div class="topbar">
+    <div class="brand">Elevate<b>.</b></div>
+    <div class="right"><span class="who" id="agent-who"></span><button class="signout">Sign out</button></div>
+  </div>
+  <div class="dash-hero"><div class="dash-hero-inner" id="dash-hero-inner"></div></div>
+  <div class="wrap"><div id="agent-modules"></div></div>
+</section>
+
+<section id="view-module" style="display:none">
+  <div class="topbar">
+    <div class="brand">Elevate<b>.</b></div>
+    <div class="right"><button class="back" id="module-back">&larr; Back to onboarding</button></div>
+  </div>
+  <div id="module-body"></div>
+</section>
+
+<section id="view-admin" style="display:none">
+  <div class="topbar">
+    <div class="brand">Elevate<b>.</b> <span style="font-family:var(--mono);font-size:11px;color:#C9C4B8;letter-spacing:.1em">ADMIN</span></div>
+    <div class="right"><span class="who" id="admin-who"></span><button class="signout">Sign out</button></div>
+  </div>
+  <div class="wrap">
+    <div class="tabs">
+      <button class="tab active" data-tab="modules">Modules</button>
+      <button class="tab" data-tab="agents">Agent progress</button>
+    </div>
+    <div id="tab-modules">
+      <div class="row" style="justify-content:space-between;margin-bottom:18px">
+        <span class="label">Onboarding modules &middot; in order</span>
+        <button class="btn sm" id="new-module">+ New module</button>
+      </div>
+      <div id="admin-modules"></div>
+    </div>
+    <div id="tab-agents" style="display:none">
+      <span class="label" style="display:block;margin-bottom:14px">Agents &amp; their progress</span>
+      <div id="admin-agents"></div>
+    </div>
+  </div>
+</section>
+
+<div class="overlay" id="overlay"><div class="sheet" id="sheet"></div></div>
+<div class="success" id="success"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL="https://qgvrdlokbgavsgqpvway.supabase.co";
+const SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFndnJkbG9rYmdhdnNncXB2d2F5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE2MjAxNTEsImV4cCI6MjA5NzE5NjE1MX0.MreqXyB9eNeAsPuuKbs6nn1KHiLHBTfbqdc7GEUmg9k";
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+let ME=null;
+
+function show(v){["login","agent","module","admin"].forEach(x=>document.getElementById("view-"+x).style.display=(x===v?"block":"none"));}
+function esc(s){return (s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function closeSheet(){document.getElementById("overlay").classList.remove("open");}
+document.getElementById("overlay").addEventListener("click",e=>{if(e.target.id==="overlay")closeSheet();});
+document.querySelectorAll(".signout").forEach(b=>b.addEventListener("click",async()=>{await sb.auth.signOut();route();}));
+function typeLabel(t){return{video:"Video",link_submission:"Submit a link",scheduler:"Book a session",datetime:"Pick a date & time",acknowledgment:"Acknowledge",file_upload:"Upload a file",embedded_academy:"Academy course",mark_complete:"Task"}[t]||t;}
+function statusText(s){return{available:"Start",complete:"Done",submitted:"Awaiting coach",locked:"Locked"}[s]||s;}
+function embedUrl(u){const y=(u||"").match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([\w-]+)/);if(y)return "https://www.youtube.com/embed/"+y[1];const v=(u||"").match(/vimeo\.com\/(\d+)/);if(v)return "https://player.vimeo.com/video/"+v[1];return u;}
+function ctaLabel(m){return{video:"I've watched this",link_submission:"Submit link",scheduler:"I've booked my session",datetime:"Submit date",acknowledgment:"I acknowledge & agree",file_upload:"Upload & complete",embedded_academy:"I've finished the course",mark_complete:(m.cta_label||"Mark as complete")}[m.type]||"Mark as complete";}
+
+function ringHTML(pct,size){
+  const sw=Math.max(7,Math.round(size*0.085));
+  const r=(size-sw)/2, circ=2*Math.PI*r, cx=size/2;
+  const off=circ*(1-(pct/100));
+  return '<div class="ring-wrap" style="width:'+size+'px;height:'+size+'px"><svg class="ring" viewBox="0 0 '+size+' '+size+'">'
+    +'<circle class="ring-bg" cx="'+cx+'" cy="'+cx+'" r="'+r+'" stroke-width="'+sw+'"/>'
+    +'<circle class="ring-arc" cx="'+cx+'" cy="'+cx+'" r="'+r.toFixed(1)+'" stroke-width="'+sw+'" stroke-dasharray="'+circ.toFixed(1)+'" stroke-dashoffset="'+circ.toFixed(1)+'" data-target="'+off.toFixed(1)+'" transform="rotate(-90 '+cx+' '+cx+')"/></svg>'
+    +'<div class="ring-center"><div class="ring-pct">'+Math.round(pct)+'<span style="font-size:.5em">%</span></div></div></div>';
+}
+function animateRings(){requestAnimationFrame(()=>{requestAnimationFrame(()=>{document.querySelectorAll(".ring-arc").forEach(a=>{a.style.strokeDashoffset=a.getAttribute("data-target");});});});}
+
+function computeStatuses(modules,progress){
+  const by={};(progress||[]).forEach(p=>by[p.module_id]=p);
+  let ok=true;
+  return [...modules].sort((a,b)=>a.order_index-b.order_index).map(m=>{
+    const ex=by[m.id];let st;
+    if(ex&&ex.status==="complete")st="complete";
+    else if(ex&&ex.status==="submitted")st="submitted";
+    else st=ok?"available":"locked";
+    if(m.is_blocking&&st!=="complete")ok=false;
+    return {...m,_status:st,_progress:ex||null};
+  });
+}
+async function ensureProgress(aid,mid){
+  const {data,error}=await sb.from("progress").upsert({agent_id:aid,module_id:mid,status:"available"},{onConflict:"agent_id,module_id",ignoreDuplicates:false}).select().single();
+  if(error)throw error;return data;
+}
+async function saveSubmission(pid,type,payload){const {error}=await sb.from("submissions").insert({progress_id:pid,type,payload});if(error)throw error;}
+async function setStatus(pid,status,by){var b=(by===undefined)?null:by;const p={status};if(status==="complete"){p.completed_at=new Date().toISOString();p.completed_by=b;}const {error}=await sb.from("progress").update(p).eq("id",pid);if(error)throw error;}
+
+function showSuccess(text,cb){
+  const s=document.getElementById("success");
+  s.innerHTML='<div class="success-inner"><svg viewBox="0 0 90 90"><circle class="sc-circle" cx="45" cy="45" r="40"/><path class="sc-check" d="M28 46l11 11l23-24"/></svg><div class="sc-text">'+esc(text)+'</div></div>';
+  s.classList.add("open");
+  setTimeout(()=>{s.classList.remove("open");if(cb)cb();},1300);
+}
+
+async function route(){
+  const {data:{session}}=await sb.auth.getSession();
+  if(!session){show("login");return;}
+  const {data:profile}=await sb.from("profiles").select("*").eq("id",session.user.id).single();
+  ME={user:session.user,profile};
+  if(profile&&profile.role==="admin"){show("admin");initAdmin();}
+  else{show("agent");initAgent();}
+}
+
+async function doSignIn(){
+  const e=document.getElementById("login-err");e.textContent="";
+  const email=document.getElementById("email").value.trim();const pw=document.getElementById("password").value;
+  if(!email||!pw){e.textContent="Enter your email and password.";return;}
+  const {error}=await sb.auth.signInWithPassword({email,password:pw});
+  if(error){e.textContent="That email and password didn't match. Try again.";return;}
+  route();
+}
+document.getElementById("signin").addEventListener("click",doSignIn);
+document.getElementById("password").addEventListener("keydown",e=>{if(e.key==="Enter")doSignIn();});
+
+/* ===== AGENT DASHBOARD ===== */
+let AGENT_MODS=[];
+async function initAgent(){
+  document.getElementById("agent-who").textContent=ME.profile&&ME.profile.full_name?ME.profile.full_name:ME.user.email;
+  await loadAgent();
+}
+async function loadAgent(){
+  const {data:modules}=await sb.from("modules").select("*").eq("is_published",true).order("order_index");
+  const {data:progress}=await sb.from("progress").select("*").eq("agent_id",ME.user.id);
+  AGENT_MODS=computeStatuses(modules||[],progress||[]);
+  renderAgent();
+}
+function secLabel(t){const d=document.createElement("div");d.className="sec-label";d.textContent=t;return d;}
+function renderAgent(){
+  const total=AGENT_MODS.length,done=AGENT_MODS.filter(m=>m._status==="complete").length;
+  const pct=total?(done/total*100):0;
+  const first=(((ME.profile&&ME.profile.full_name)||"").split(" ")[0])||"there";
+  let sub;
+  if(!total)sub="Your onboarding steps will appear here soon.";
+  else if(done===0)sub="Let's get you started \u2014 your first step is just below.";
+  else if(done===total)sub="You're fully certified. Welcome to the team.";
+  else sub="You're "+Math.round(pct)+"% of the way to certified. Keep the momentum.";
+  document.getElementById("dash-hero-inner").innerHTML=
+    '<div class="dash-left"><span class="dash-eyebrow">Your path to certified</span><h1 class="dash-greet">Welcome, '+esc(first)+'.</h1><p class="dash-sub">'+sub+'</p></div>'
+    +'<div class="dash-right">'+ringHTML(pct,154)+'<div class="dash-ringlabel">'+done+' of '+total+' steps complete</div></div>';
+
+  const upNext=AGENT_MODS.filter(m=>m._status==="available"||m._status==="submitted");
+  const completed=AGENT_MODS.filter(m=>m._status==="complete");
+  const lockedCount=AGENT_MODS.filter(m=>m._status==="locked").length;
+  const list=document.getElementById("agent-modules");list.innerHTML="";
+
+  if(upNext.length){
+    list.appendChild(secLabel("Up next"));
+    upNext.forEach(m=>{
+      const i=AGENT_MODS.indexOf(m);
+      const right=m._status==="submitted"?'<span class="pill submitted">Awaiting coach</span>':'<span class="f-go">Start &rarr;</span>';
+      const card=document.createElement("div");card.className="feature";
+      card.innerHTML='<span class="f-num">'+String(i+1).padStart(2,"0")+'</span><span><div class="f-eyebrow">'+typeLabel(m.type)+'</div><div class="f-title">'+esc(m.title)+'</div><div class="f-desc">'+esc(m.description||"")+'</div></span>'+right;
+      card.addEventListener("click",()=>showModulePage(m));
+      list.appendChild(card);
+    });
+  }else if(total&&done===total){
+    const d=document.createElement("div");d.className="alldone";
+    d.innerHTML='<h2>You\'re all set.</h2><p>Every onboarding step is complete.</p>';
+    list.appendChild(d);
+  }
+  if(lockedCount){
+    const h=document.createElement("div");h.className="lock-hint";
+    h.innerHTML='<span>&#128274;</span><span>'+lockedCount+' more '+(lockedCount===1?"step":"steps")+' unlock as you finish.</span>';
+    list.appendChild(h);
+  }
+  if(completed.length){
+    list.appendChild(secLabel("Completed"));
+    const tl=document.createElement("div");tl.className="timeline";
+    completed.forEach(m=>{
+      const it=document.createElement("div");it.className="tl-item";
+      it.innerHTML='<span class="tl-check">&#10003;</span><span class="tl-title">'+esc(m.title)+'</span>';
+      it.addEventListener("click",()=>showModulePage(m));
+      tl.appendChild(it);
+    });
+    list.appendChild(tl);
+  }
+  animateRings();
+}
+document.getElementById("module-back").addEventListener("click",async()=>{await loadAgent();show("agent");window.scrollTo(0,0);});
+
+function spineHTML(current){
+  let s='<div class="side-title">Your path</div><div class="spine"><div class="line"></div>';
+  AGENT_MODS.forEach((x,idx)=>{
+    const isCur=x===current;
+    const dCls=x._status==="complete"?"done":(isCur?"cur":"");
+    const inner=x._status==="complete"?"&#10003;":(x._status==="locked"?"&#128274;":String(idx+1).padStart(2,"0"));
+    const tCls=isCur?"cur":(x._status==="locked"?"locked":"");
+    const title=x._status==="locked"?"Locked":esc(x.title);
+    s+='<div class="node"><span class="dot '+dCls+'">'+inner+'</span><span class="stext '+tCls+'">'+title+'</span></div>';
+  });
+  return s+'</div>';
+}
+function showModulePage(m){
+  const c=m.content||{};const i=AGENT_MODS.indexOf(m);
+  const done=m._status==="complete";const awaiting=m._status==="submitted";const dis=(done||awaiting)?"disabled":"";
+  const total=AGENT_MODS.length,doneCount=AGENT_MODS.filter(x=>x._status==="complete").length;
+  const pct=total?(doneCount/total*100):0;
+
+  let h='<div class="mod-hero"><div class="mod-glow"></div><div class="mod-hero-num">'+String(i+1).padStart(2,"0")+'</div><div class="mod-hero-inner"><span class="mod-eyebrow">Step '+String(i+1).padStart(2,"0")+' &middot; '+typeLabel(m.type)+'</span><h1 class="mod-title">'+esc(m.title)+'</h1><p class="mod-desc">'+esc(m.description||"")+'</p></div></div>';
+  h+='<div class="mod-layout"><div class="mod-main">';
+
+  if(c.video_url)h+='<iframe class="embed" src="'+embedUrl(c.video_url)+'" allowfullscreen></iframe>';
+  if(m.type==="link_submission"){h+='<label class="label flabel">Paste your link</label><input class="field" id="link" type="url" placeholder="https://linktr.ee/yourname" '+dis+'>';}
+  else if(m.type==="datetime"){h+='<label class="label flabel">'+esc(c.prompt||"Choose a date and time")+'</label><input class="field" id="dt" type="datetime-local" '+dis+'>';}
+  else if(m.type==="scheduler"){h+=c.calendar_url?'<iframe class="cal" src="'+esc(c.calendar_url)+'"></iframe>':'<p class="note">No booking link set yet.</p>';h+='<p class="note">Book a time above. Your coach marks this complete after your session.</p>';}
+  else if(m.type==="acknowledgment"){h+='<div class="body-html">'+(c.body_html||"")+'</div>';}
+  else if(m.type==="file_upload"){h+='<label class="label flabel">Upload your file</label><input class="field" id="file" type="file" '+dis+'>';}
+  else if(m.type==="embedded_academy"){h+=c.academy_url?'<div class="row"><a class="btn" href="'+esc(c.academy_url)+'" target="_blank" rel="noopener">Open the Academy</a></div>':"";h+='<p class="note">Live scoring lands here in a later update.</p>';}
+  else if(m.type==="mark_complete"){h+=c.body_html?'<div class="body-html">'+c.body_html+'</div>':"";}
+
+  if(Array.isArray(c.links)&&c.links.length){
+    h+='<div class="row" style="margin-top:18px">';
+    c.links.forEach(l=>{if(l&&l.url)h+='<a class="btn ghost" href="'+esc(l.url)+'" target="_blank" rel="noopener">'+esc(l.label||"Open link")+'</a>';});
+    h+='</div>';
+  }
+  h+='<div class="complete-zone">';
+  if(done)h+='<span class="pill complete">Completed</span>';
+  else if(awaiting)h+='<span class="pill submitted">Submitted &mdash; waiting on your coach</span>';
+  else h+='<button class="btn" id="cta">'+esc(ctaLabel(m))+'</button>';
+  h+='<div class="err" id="serr"></div></div>';
+  h+='</div><aside class="mod-side"><div class="side-card center">'+ringHTML(pct,128)+'<div class="side-stat">'+doneCount+' of '+total+' complete</div></div><div class="side-card">'+spineHTML(m)+'</div><div class="side-card help-card">Stuck on a step? Reach out to your <b>onboarding coach</b> \u2014 we\u2019re here to help you get through it.</div></aside></div>';
+
+  document.getElementById("module-body").innerHTML=h;
+  show("module");window.scrollTo(0,0);animateRings();
+  const cta=document.getElementById("cta");if(cta)cta.addEventListener("click",()=>handleCta(m));
+}
+async function handleCta(m){
+  const serr=document.getElementById("serr");serr.textContent="";
+  try{
+    const prog=await ensureProgress(ME.user.id,m.id);
+    if(m.type==="link_submission"){const u=document.getElementById("link").value.trim();if(!u){serr.textContent="Paste your link first.";return;}await saveSubmission(prog.id,"link",{url:u});}
+    else if(m.type==="datetime"){const v=document.getElementById("dt").value;if(!v){serr.textContent="Pick a date and time first.";return;}await saveSubmission(prog.id,"datetime",{datetime:v});}
+    else if(m.type==="file_upload"){const f=document.getElementById("file").files[0];if(!f){serr.textContent="Choose a file first.";return;}const path=ME.user.id+"/"+m.id+"/"+Date.now()+"_"+f.name;const {error}=await sb.storage.from("submissions").upload(path,f);if(error){serr.textContent="Upload failed: "+error.message;return;}await saveSubmission(prog.id,"file",{path});}
+    else if(m.type==="scheduler"){await saveSubmission(prog.id,"booking",{note:"Agent confirmed booking"});}
+    const isAdmin=m.completion_authority==="admin";
+    if(isAdmin)await setStatus(prog.id,"submitted");else await setStatus(prog.id,"complete",ME.user.id);
+    await loadAgent();
+    showSuccess(isAdmin?"Submitted":"Step complete",()=>{show("agent");window.scrollTo(0,0);});
+  }catch(e){serr.textContent="Something went wrong. Try again.";console.error(e);}
+}
+
+/* ===== ADMIN ===== */
+let ADMIN_MODS=[];let MOVING=false;
+document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{
+  document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));t.classList.add("active");
+  const v=t.dataset.tab;
+  document.getElementById("tab-modules").style.display=v==="modules"?"block":"none";
+  document.getElementById("tab-agents").style.display=v==="agents"?"block":"none";
+  if(v==="agents")loadAgents();
+}));
+document.getElementById("new-module").addEventListener("click",()=>openEditor(null));
+async function initAdmin(){
+  document.getElementById("admin-who").textContent=ME.profile&&ME.profile.full_name?ME.profile.full_name:ME.user.email;
+  await loadAdminModules();
+}
+async function loadAdminModules(){const {data}=await sb.from("modules").select("*").order("order_index");ADMIN_MODS=data||[];renderAdminModules();}
+function renderAdminModules(){
+  const box=document.getElementById("admin-modules");box.innerHTML="";
+  if(!ADMIN_MODS.length){box.innerHTML='<p class="note">No modules yet. Hit "New module" to add your first onboarding step.</p>';return;}
+  ADMIN_MODS.forEach((m,i)=>{
+    const tags=[typeLabel(m.type),m.completion_authority==="admin"?"admin-verified":"self",m.is_blocking?"blocking":"non-blocking",m.is_published?"published":"hidden"].join(" &middot; ");
+    const el=document.createElement("div");el.className="mod-row";
+    el.innerHTML='<span class="idx">'+String(i+1).padStart(2,"0")+'</span><span><div class="t">'+esc(m.title)+'</div><div class="s">'+tags+'</div></span><span class="ctrls"><button class="icon-btn" data-up '+(i===0?"disabled":"")+'>&uarr;</button><button class="icon-btn" data-down '+(i===ADMIN_MODS.length-1?"disabled":"")+'>&darr;</button><button class="btn ghost sm" data-edit>Edit</button><button class="btn danger sm" data-del>Delete</button></span>';
+    el.querySelector("[data-up]").addEventListener("click",()=>moveModule(i,-1));
+    el.querySelector("[data-down]").addEventListener("click",()=>moveModule(i,1));
+    el.querySelector("[data-edit]").addEventListener("click",()=>openEditor(m));
+    el.querySelector("[data-del]").addEventListener("click",()=>delModule(m));
+    box.appendChild(el);
+  });
+}
+async function moveModule(i,dir){
+  if(MOVING)return;const j=i+dir;if(j<0||j>=ADMIN_MODS.length)return;MOVING=true;
+  try{const arr=ADMIN_MODS.slice();const t=arr[i];arr[i]=arr[j];arr[j]=t;for(let k=0;k<arr.length;k++){await sb.from("modules").update({order_index:k+1}).eq("id",arr[k].id);}await loadAdminModules();}catch(e){console.error(e);}
+  MOVING=false;
+}
+async function delModule(m){if(!confirm('Delete "'+m.title+'"? This removes it for everyone.'))return;await sb.from("modules").delete().eq("id",m.id);await loadAdminModules();}
+function openEditor(m){
+  const e=m||{};const c=e.content||{};
+  const sel=(v,opt)=>opt.map(o=>'<option value="'+o[0]+'"'+(v===o[0]?" selected":"")+'>'+o[1]+'</option>').join("");
+  const typeOpts=[["video","Video"],["link_submission","Submit a link"],["scheduler","Book a session (embedded calendar)"],["datetime","Pick a date & time"],["acknowledgment","Acknowledge"],["file_upload","Upload a file"],["embedded_academy","Academy course"],["mark_complete","Plain task"]];
+  let h='<span class="label">'+(m?"Edit module":"New module")+'</span><h2 style="margin-bottom:18px">Module details</h2>';
+  h+='<label class="label flabel">Title</label><input class="field" id="e-title" value="'+esc(e.title||"")+'">';
+  h+='<label class="label flabel">Description (shown to agent)</label><textarea class="field" id="e-desc">'+esc(e.description||"")+'</textarea>';
+  h+='<label class="label flabel">Type</label><select class="field" id="e-type">'+sel(e.type||"video",typeOpts)+'</select>';
+  h+='<div id="e-typefields"></div>';
+  h+='<div style="border-top:1px solid var(--line);margin:14px 0;padding-top:14px"><span class="label" style="display:block;margin-bottom:10px">Additional content (optional, any module)</span>';
+  h+='<label class="label flabel">Embed a video (YouTube / Vimeo URL)</label><input class="field" id="c-video" value="'+esc(c.video_url||"")+'">';
+  h+='<label class="label flabel">Resource links &mdash; button label + URL</label><div id="c-links"></div><button class="btn ghost sm" type="button" id="c-addlink">+ Add link</button></div>';
+  h+='<label class="label flabel">Who marks it complete?</label><select class="field" id="e-auth">'+sel(e.completion_authority||"self",[["self","The agent (self-serve)"],["admin","A coach / admin"]])+'</select>';
+  h+='<label class="row" style="margin-bottom:10px"><input type="checkbox" id="e-block" '+((e.is_blocking===undefined?true:e.is_blocking)?"checked":"")+'> <span>Blocking &mdash; must finish before the next module unlocks</span></label>';
+  h+='<label class="row" style="margin-bottom:16px"><input type="checkbox" id="e-pub" '+((e.is_published===undefined?true:e.is_published)?"checked":"")+'> <span>Published &mdash; visible to agents</span></label>';
+  h+='<div class="err" id="e-err"></div><div class="row" style="margin-top:8px"><button class="btn" id="e-save">Save module</button><button class="btn ghost" id="e-cancel">Cancel</button></div>';
+  document.getElementById("sheet").innerHTML=h;
+  document.getElementById("overlay").classList.add("open");
+  const renderTypeFields=()=>{
+    const t=document.getElementById("e-type").value;let f="";
+    if(t==="scheduler")f='<label class="label flabel">Google appointment / Calendly embed URL</label><input class="field" id="c-cal" value="'+esc(c.calendar_url||"")+'">';
+    else if(t==="datetime")f='<label class="label flabel">Question shown to the agent</label><input class="field" id="c-prompt" value="'+esc(c.prompt||"")+'" placeholder="e.g. When is your photo session booked for?">';
+    else if(t==="embedded_academy")f='<label class="label flabel">Academy URL</label><input class="field" id="c-acad" value="'+esc(c.academy_url||"")+'">';
+    else if(t==="acknowledgment"||t==="mark_complete")f='<label class="label flabel">Body text (HTML allowed)</label><textarea class="field" id="c-body">'+esc(c.body_html||"")+'</textarea>';
+    else if(t==="link_submission")f='<p class="note">Agent pastes a link. No extra setup needed.</p>';
+    else if(t==="file_upload")f='<p class="note">Agent uploads a file. Requires a Storage bucket named "submissions".</p>';
+    else if(t==="video")f='<p class="note">Set the video in the "Embed a video" field below.</p>';
+    document.getElementById("e-typefields").innerHTML=f;
+  };
+  renderTypeFields();
+  document.getElementById("e-type").addEventListener("change",renderTypeFields);
+  const linksBox=document.getElementById("c-links");
+  const addLinkRow=(l)=>{l=l||{};const r=document.createElement("div");r.className="row link-row";r.style.marginBottom="8px";r.innerHTML='<input class="field link-label" style="flex:1;min-width:120px" placeholder="Button label" value="'+esc(l.label||"")+'"><input class="field link-url" style="flex:2;min-width:160px" placeholder="https://..." value="'+esc(l.url||"")+'"><button class="icon-btn link-del" type="button">&times;</button>';r.querySelector(".link-del").addEventListener("click",()=>r.remove());linksBox.appendChild(r);};
+  (Array.isArray(c.links)?c.links:[]).forEach(addLinkRow);
+  document.getElementById("c-addlink").addEventListener("click",()=>addLinkRow());
+  document.getElementById("e-cancel").addEventListener("click",closeSheet);
+  document.getElementById("e-save").addEventListener("click",()=>saveModule(m));
+}
+async function saveModule(existing){
+  const err=document.getElementById("e-err");err.textContent="";
+  const title=document.getElementById("e-title").value.trim();if(!title){err.textContent="Give the module a title.";return;}
+  const type=document.getElementById("e-type").value;const content={};
+  const v=document.getElementById("c-video").value.trim();if(v)content.video_url=v;
+  const links=[];document.querySelectorAll("#c-links .link-row").forEach(r=>{const lab=r.querySelector(".link-label").value.trim();const url=r.querySelector(".link-url").value.trim();if(url)links.push({label:lab||"Open link",url});});if(links.length)content.links=links;
+  let el;
+  if(type==="scheduler"){el=document.getElementById("c-cal");if(el)content.calendar_url=el.value.trim();}
+  else if(type==="datetime"){el=document.getElementById("c-prompt");if(el)content.prompt=el.value.trim();}
+  else if(type==="embedded_academy"){el=document.getElementById("c-acad");if(el)content.academy_url=el.value.trim();}
+  else if(type==="acknowledgment"||type==="mark_complete"){el=document.getElementById("c-body");if(el)content.body_html=el.value;}
+  const rec={title,description:document.getElementById("e-desc").value.trim(),type,content,completion_authority:document.getElementById("e-auth").value,is_blocking:document.getElementById("e-block").checked,is_published:document.getElementById("e-pub").checked,updated_at:new Date().toISOString()};
+  try{
+    if(existing&&existing.id){const {error}=await sb.from("modules").update(rec).eq("id",existing.id);if(error)throw error;}
+    else{const max=ADMIN_MODS.reduce((a,m)=>Math.max(a,m.order_index),0);rec.order_index=max+1;const {error}=await sb.from("modules").insert(rec);if(error)throw error;}
+    closeSheet();await loadAdminModules();
+  }catch(e){err.textContent="Save failed: "+e.message;console.error(e);}
+}
+async function resetAgent(a){
+  if(!confirm("Reset all onboarding progress for "+(a.full_name||a.email)+"? They'll start over from step one. This can't be undone."))return;
+  const {error}=await sb.from("progress").delete().eq("agent_id",a.id);
+  if(error){alert("Reset failed: "+error.message);return;}
+  await loadAgents();
+}
+async function loadAgents(){
+  const box=document.getElementById("admin-agents");box.innerHTML='<p class="note">Loading...</p>';
+  const {data:agents}=await sb.from("profiles").select("*").eq("role","agent").order("full_name");
+  const {data:modules}=await sb.from("modules").select("*").eq("is_published",true).order("order_index");
+  box.innerHTML="";
+  if(!agents||!agents.length){box.innerHTML='<p class="note">No agents yet. Add them in Supabase &rarr; Authentication &rarr; Users &rarr; Create new user.</p>';return;}
+  for(const a of agents){
+    const {data:prog}=await sb.from("progress").select("*").eq("agent_id",a.id);
+    const computed=computeStatuses(modules||[],prog||[]);const done=computed.filter(m=>m._status==="complete").length;
+    const card=document.createElement("div");card.className="agent-card";
+    card.innerHTML='<div class="head"><div><div class="name">'+esc(a.full_name||a.email)+'</div><div class="email">'+esc(a.email||"")+'</div></div><div class="row" style="margin-top:0"><span class="pill '+(done===computed.length&&computed.length?"complete":"available")+'">'+done+' / '+computed.length+'</span><button class="btn danger sm" data-reset>Reset</button></div></div><div class="agent-prog"></div>';
+    const head=card.querySelector(".head"),body=card.querySelector(".agent-prog");
+    head.addEventListener("click",()=>body.classList.toggle("open"));
+    card.querySelector("[data-reset]").addEventListener("click",(ev)=>{ev.stopPropagation();resetAgent(a);});
+    computed.forEach((m,i)=>{
+      const line=document.createElement("div");line.className="prog-line";
+      let right='<span class="pill '+m._status+'">'+statusText(m._status)+'</span>';
+      if(m._status==="submitted"&&m.completion_authority==="admin")right='<button class="btn sm" data-done>Mark complete</button>';
+      line.innerHTML='<span class="pl-title">'+String(i+1).padStart(2,"0")+'. '+esc(m.title)+'</span>'+right;
+      const db=line.querySelector("[data-done]");
+      if(db)db.addEventListener("click",async(ev)=>{ev.stopPropagation();if(m._progress){await setStatus(m._progress.id,"complete",ME.user.id);await loadAgents();}});
+      body.appendChild(line);
+    });
+    box.appendChild(card);
+  }
+}
+
+route();
+</script>
+</body>
+</html>
